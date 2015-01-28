@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Protractor Gesture Test</title>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="../protractor.js"></script>
+    <style>
+canvas {
+  background: #ddd;
+  border: 1px solid #ccc;
+  margin-top: 4px;
+}
+    </style>
+  </head>
+  <body>
+    <select id="mode">
+      <option value="train" selected>Train</option>
+      <option value="test">Test</option>
+    </select>
+    <select id="name">
+      <option value="name1" selected>Name1</option>
+      <option value="name2">Name2</option>
+      <option value="name3">Name3</option>
+    </select>
+    <br/>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <br/>
+    <div id="message">Hello</div>
+  </body>
+  <script>
+var THRESHOLD = 2;
+var mode = "train";
+var name = "name1";
+
+d3.select("#mode").on("change", function(evt) {
+  var value = this.options[this.selectedIndex].value;
+  mode = value;
+});
+
+d3.select("#name").on("change", function(evt) {
+  var value = this.options[this.selectedIndex].value;
+  name = value;
+});
+
+var store = new GestureStore();
+var stroke = null;
+
+var canvas = d3.select("#canvas").node();
+var width = canvas.width;
+var height = canvas.height;
+var g = canvas.getContext("2d");
+g.lineWidth = 3;
+g.lineCap = "round"
+g.strokeStyle = "black";
+
+function getXY(evt) {
+  var rect = canvas.getBoundingClientRect();
+  return {
+    x: evt.clientX - rect.left,
+    y: evt.clientY - rect.top
+  };
+}
+
+d3.select("#canvas").on("mousedown", function() {
+  // get xy coordinate
+  var pos = getXY(d3.event);
+  
+  // update canvas
+  g.clearRect(0, 0, width, height);
+  g.beginPath();
+  g.moveTo(pos.x, pos.y);
+  
+  // update gesture model
+  stroke = [new GesturePoint(pos.x, pos.y, Date.now())];
+  
+  // add listeners
+  d3.select(this).on("mousemove", move).on("mouseup", up);
+});
+
+function move() {
+  // get xy coordinate
+  var pos = getXY(d3.event);
+  
+  // update canvas
+  g.lineTo(pos.x, pos.y);
+  g.stroke();
+  g.beginPath();
+  g.moveTo(pos.x, pos.y);
+  
+  // update gesture model
+  stroke.push(new GesturePoint(pos.x, pos.y, Date.now()));
+}
+
+function up() {
+  // update gesture model
+  var gesture = new Gesture();
+  gesture.addStroke(new GestureStroke(stroke));
+  if (mode === "train") {
+    store.addGesture(name, gesture);
+    d3.select("#message").text("ADDED: " + name);
+  } else {
+    var pred = store.recognize(gesture);
+    var top = pred[0];
+    if (top.score > THRESHOLD) {
+      d3.select("#message").text("RECOGNIZE: " + top.name + " (" + top.score.toFixed(2) + ")");
+    } else {
+      d3.select("#message").text("RECOGNIZE: None!");
+    }
+  }
+  stroke = null;
+
+  // remove listeners
+  d3.select("#canvas").on("mousemove", null).on("mouseup", null);
+}
+  
+  </script>
+</html>
