@@ -102,6 +102,7 @@ Gesture.prototype.toJSON = function() {
   for (var i=0; i<count; ++i) {
     strokes.push(this.mStrokes[i].toJSON());
   }
+  return strokes;
 };
 
 Gesture.fromJSON = function(json) {

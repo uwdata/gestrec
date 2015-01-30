@@ -1,0 +1,131 @@
+.library * {
+  font-family: Helvetica Neue, Helvetica, Arial;
+}
+
+.library .header {
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.library div.control {
+  margin-top: 4px;
+  border-top: 1px solid #eee;
+  padding-top: 6px;
+}
+
+.library .entry {
+  position: relative;
+  padding: 4px 8px;
+  padding-left: 10px;
+  transition: background-color 200ms;
+  border-left: 2px solid transparent;
+}
+
+.library .entry.selected {
+  border-left: 2px solid steelblue;
+}
+
+.library .entry:hover {
+  background-color: #fdfff5;
+}
+
+.library .control.add {
+  padding: 4px 8px;
+}
+
+.library .head {
+  margin-bottom: 8px;
+}
+
+.library .head .name {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.library .head .input {
+  display: none;
+  position: absolute;
+  left: 8px;
+  top: 2px;
+}
+
+.library .head .input.show {
+  display: block;
+}
+
+.library .head .input input {
+  width: 150px;
+  border: 1px solid #ccc;
+  margin-right: 4px;
+  font-size: 16px;  
+}
+
+.library button {
+  border-radius: 6px;
+  border: 1px solid transparent;
+  padding-bottom: 2px;
+  background-color: transparent;
+  color: black;
+  cursor: pointer;
+}
+
+.library button:hover {
+  border: 1px solid #ccc;
+  color: #aa00bb;
+}
+
+.library .control,
+.library button {
+  font-size: 11px;
+}
+
+.library .control:hover {
+  color: #aa00bb;
+  cursor: pointer;
+}
+
+.library .head .control {
+  visibility: hidden;
+  margin-left: 4px;
+  margin-right: 2px;
+}
+
+.library .entry:hover .head .control {
+  visibility: visible;
+}
+
+.library .instance {
+  position: relative;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.library .instance canvas {
+  border: 1px solid #dedede;
+}
+
+.library .instance:hover canvas {
+  border: 1px solid #aa00bb;
+}
+
+.library .remove {
+  display: block;
+  visibility: hidden;
+  position: absolute;
+  right: 3px;
+  top: -3px;
+  color: black;
+  cursor: pointer;
+}
+
+.library .remove:hover {
+  color: #c00;
+}
+
+.library .entry:hover .head > .remove,
+.library .instance:hover > .remove {
+  visibility: visible;
+}

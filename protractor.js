@@ -248,6 +248,7 @@ Gesture.prototype.toJSON = function() {
   for (var i=0; i<count; ++i) {
     strokes.push(this.mStrokes[i].toJSON());
   }
+  return strokes;
 };
 
 Gesture.fromJSON = function(json) {
@@ -262,7 +263,7 @@ Gesture.fromJSON = function(json) {
  */
 function GestureStore() {
   this.mSequenceType = GestureStore.SEQUENCE_SENSITIVE;
-  this.mOrientationStyle = GestureStore.ORIENTATION_SENSITIVE;
+  this.mOrientationStyle = GestureStore.ORIENTATION_SENSITIVE_4;
   this.mClassifier = new InstanceLearner();
   this.mChanged = false;
   this.mNamedGestures = {};
@@ -280,9 +281,6 @@ GestureStore.ORIENTATION_SENSITIVE = 2;
 GestureStore.ORIENTATION_SENSITIVE_4 = 4;
 // at most 8 directions can be recognized
 GestureStore.ORIENTATION_SENSITIVE_8 = 8;
-
-GestureStore.FILE_FORMAT_VERSION = 1;
-GestureStore.PROFILE_LOADING_SAVING = false;
 
 /**
  * Specify how the gesture library will handle orientation. 
@@ -368,7 +366,7 @@ GestureStore.prototype.addGesture = function(entryName, gesture) {
  * @param gesture
  */
 GestureStore.prototype.removeGesture = function(entryName, gesture) {
-  var gestures = mNamedGestures[entryName];
+  var gestures = this.mNamedGestures[entryName];
   if (gestures == null) {
     return;
   }
@@ -408,7 +406,7 @@ GestureStore.prototype.getGestures = function(entryName) {
   if (gestures != null) {
     return gestures.slice();
   } else {
-    return null;
+    return [];
   }
 };
 

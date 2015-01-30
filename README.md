@@ -17,4 +17,4 @@ node_modules folder if it does not exist.
 
 ### Testing
 
-A simple gesture training application is included for testing purposes under the `test` folder. Simply open the `test.html` file in a browser to run.
+A gesture training application is included for testing purposes under the `trainer` folder. Simply open the `index.html` file in a browser to run.
