@@ -2,7 +2,6 @@
 <html>
   <head>
     <title>Protractor Gesture Designer</title>
-    <link rel="shortcut icon" href="http://uwdata.github.io/protractor/favicon.ico"/>
     <link rel="stylesheet" type="text/css" href="library.css">
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="protractor.min.js" charset="utf-8"></script>
@@ -10,9 +9,11 @@
     <style>
 body {
   font-family: Helvetica Neue;
-  padding-top: 10px;
-  padding-left: 0px;
+  padding: 0;
   margin: 0;
+  padding-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 10px;
 }
 #designer {
   position: fixed;
@@ -32,10 +33,11 @@ canvas {
 }
 #panel {
   margin-left: 430px;
+  padding-bottom: 20px;
+  padding-right: 10px;
 }
 #export {
   position: relative;
-  padding-right: 20px;
 }
 #export .header {
   margin-bottom: 9px;
@@ -51,7 +53,7 @@ canvas {
 }
 #export .controls {
   position: absolute;
-  right: 15px;
+  right: 5px;
   top: -2px;
 }
     </style>
