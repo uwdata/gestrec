@@ -96,7 +96,11 @@ var GestureLibrary = (function() {
   proto.toJSON = function() {
     var json = this._store.toJSON();
     json.names = this._names.map(function(n) { return n.name; });
-    return JSON.stringify(json);
+    return JSON.stringify(json, function(key, val) {
+      return (key === 'x' || key === 'y') && val.toFixed
+        ? Number(val.toFixed(4))
+        : val;
+    });
   };
   
   proto.fromJSON = function(json) {
