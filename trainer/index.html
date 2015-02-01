@@ -104,6 +104,8 @@ function setMode(value) {
     d3.select("#library").style("display", "block");
     d3.select("#export").style("display", "none");
   }
+  d3.select("#canvas")
+    .style("border", mode==="train" ? "1px dashed #a33" : null);
 }
 
 d3.selectAll(".controls input").on("change", function() {
@@ -143,7 +145,7 @@ function getXY(evt) {
 function point() {
   var p = getXY(d3.event);
   var t = Date.now() - basetime;
-  return new protractor.GesturePoint(p.x/width, p.y/height, t)
+  return new protractor.GesturePoint(p.x/width, p.y/height, t);
 }
 
 d3.select("#canvas").on("mousedown", function() {

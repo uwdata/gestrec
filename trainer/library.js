@@ -41,6 +41,7 @@ var GestureLibrary = (function(d3, protractor) {
     this._namelut[newname] = idx;
     delete this._namelut[oldname];
     this._names[idx].name = newname;
+    this.setSelected(newname);
   };
   
   proto._nameRemove = function(name) {

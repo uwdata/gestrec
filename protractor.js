@@ -402,7 +402,7 @@ GestureStore.prototype.removeGesture = function(entryName, gesture) {
 };
 
 /**
- * Remove a entry of gestures
+ * Remove an entry of gestures
  * 
  * @param entryName the entry name
  */
