@@ -159,8 +159,8 @@ function getXY(evt) {
     evt = evt.changedTouches[0];
   }
   return {
-    x: evt.pageX - rect.left,
-    y: evt.pageY - rect.top
+    x: evt.clientX - rect.left,
+    y: evt.clientY - rect.top
   };
 }
 
