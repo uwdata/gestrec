@@ -127,7 +127,7 @@ d3.select("#import").on("click", function() {
 d3.select("#download").on("click", function() {
   try {
     var json = d3.select("#json").property("value");
-    download("gesture.json", json);
+    download("gestures.json", json);
   } catch (err) {
     alert(err);
   }
