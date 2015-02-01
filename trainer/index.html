@@ -27,6 +27,10 @@ body {
 #designer .controls {
   margin-bottom: 4px;
 }
+#designer .controls label {
+  font-size: 13px;
+  margin-right: 4px;
+}
 canvas {
   background: #f5f5f5;
   border: 1px solid #dedede;
@@ -61,11 +65,10 @@ canvas {
   <body>
     <div id="designer">
       <div class="controls">
-        Mode: <select id="mode">
-          <option value="train" selected>Train</option>
-          <option value="test">Test</option>
-          <option value="export">Export</option>
-        </select>
+        Mode: 
+        <label><input type="radio" name="mode" value="train" checked>Train</label>
+        <label><input type="radio" name="mode" value="test">Test</label>
+        <label><input type="radio" name="mode" value="export">Import/Export</label>
       </div>
       <canvas id="canvas" width="400" height="400"></canvas>
       <br/>
@@ -86,11 +89,13 @@ canvas {
   </body>
   <script>
 var THRESHOLD = 2;
-var mode = "train";
+var mode = "";
+
+setMode("train");
 
 function setMode(value) {
   mode = value;
-  d3.select("#mode").property("value", mode);
+  d3.select(".controls input[value='"+mode+"']").property("checked", true);
   if (mode === "export") {
     d3.select("#library").style("display", "none");
     d3.select("#export").style("display", "block");
@@ -101,10 +106,9 @@ function setMode(value) {
   }
 }
 
-d3.select("#mode").on("change", function(evt) {
-  var value = this.options[this.selectedIndex].value;
+d3.selectAll(".controls input").on("change", function() {
   d3.select("#message").text("");
-  setMode(value);
+  setMode(this.value);
 });
 
 d3.select("#load").on("click", function() {
@@ -121,7 +125,7 @@ var lib = new GestureLibrary(d3.select("#library").node())
   .addEntry()
   .render();
 
-var stroke = null;
+var points = null;
 var basetime = null;
 
 var canvas = d3.select("#canvas").node();
@@ -136,14 +140,19 @@ function getXY(evt) {
   };
 }
 
+function point() {
+  var p = getXY(d3.event);
+  var t = Date.now() - basetime;
+  return new protractor.GesturePoint(p.x/width, p.y/height, t)
+}
+
 d3.select("#canvas").on("mousedown", function() {
   if (mode === "export") return;
     
   // update gesture model
-  var p = getXY(d3.event);
   basetime = Date.now();
-  stroke = [new GesturePoint(p.x/width, p.y/height, 0)];
-  GestureLibrary.drawPoints(canvas, stroke);
+  points = [point()];
+  GestureLibrary.drawPoints(canvas, points);
   
   // add listeners
   d3.select(window).on("mousemove", move).on("mouseup", up);
@@ -151,21 +160,16 @@ d3.select("#canvas").on("mousedown", function() {
 
 function move() {
   d3.event.preventDefault();
-
-  // update gesture model
-  var p = getXY(d3.event);
-  stroke.push(new GesturePoint(p.x/width, p.y/height, Date.now() - basetime));
-
-  // update canvas
-  GestureLibrary.drawPoints(canvas, stroke);
+  points.push(point()); // update gesture model
+  GestureLibrary.drawPoints(canvas, points); // update canvas
 }
 
 function up() {
   d3.event.preventDefault();
 
   // update gesture model
-  var gesture = new Gesture();
-  gesture.addStroke(new GestureStroke(normalize(stroke)));
+  var strokes = [new protractor.GestureStroke(normalize(points))];
+  var gesture = new protractor.Gesture(strokes);
   
   if (mode === "train") {
     lib.addGesture(gesture).render();
@@ -177,7 +181,7 @@ function up() {
     d3.select("#message").text("RECOGNIZE: " + msg);
   }
   basetime = null;
-  stroke = null;
+  points = null;
 
   // remove listeners
   d3.select(window).on("mousemove", null).on("mouseup", null);

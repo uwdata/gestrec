@@ -11,6 +11,7 @@ all: \
 	protractor.min.js
 
 protractor.js: \
+	js/_start.js \
 	js/RectF.js \
 	js/OrientedBoundingBox.js \
 	js/Prediction.js \
@@ -22,7 +23,8 @@ protractor.js: \
 	js/GestureUtils.js \
 	js/Instance.js \
 	js/Learner.js \
-	js/InstanceLearner.js
+	js/InstanceLearner.js \
+	js/_end.js
 
 %.min.js: %.js Makefile
 	@rm -f $@

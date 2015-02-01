@@ -3,10 +3,14 @@
  * Each stroke is a sequence of timed points. A user-defined gesture can be recognized by 
  * a GestureLibrary. 
  */
-function Gesture() {
+function Gesture(strokes) {
   this.mBoundingBox = new RectF();
   this.mGestureID = this.GESTURE_ID_BASE + (++this.sGestureCount);
   this.mStrokes = [];
+  if (!strokes) return;
+  for (var i=0; i<strokes.length; ++i) {
+    this.addStroke(strokes[i]);
+  }
 }
 
 Gesture.prototype.GESTURE_ID_BASE = Date.now();

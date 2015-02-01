@@ -1,8 +1,8 @@
-var GestureLibrary = (function() {
+var GestureLibrary = (function(d3, protractor) {
 
   function GestureLibrary(el) {
     this._el = el;
-    this._store = new GestureStore();
+    this._store = new protractor.GestureStore();
     this._names = [];
     this._namelut = {};
     this._thumbsize = 100;
@@ -105,7 +105,7 @@ var GestureLibrary = (function() {
   
   proto.fromJSON = function(json) {
     data = JSON.parse(json);
-    this._store = GestureStore.fromJSON(data);
+    this._store = protractor.GestureStore.fromJSON(data);
     this._names = [];
     this._namelut = {};
     this._selected = null;
@@ -285,4 +285,4 @@ var GestureLibrary = (function() {
 
   return GestureLibrary;
 
-})();
+})(d3, protractor);

@@ -1,4 +1,17 @@
-/**
+(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define([], factory);
+  } else if (typeof exports === 'object') {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like environments that support module.exports,
+    // like Node.
+    module.exports = factory();
+  } else {
+    // Browser globals (root is window)
+    root.protractor = factory();
+  }
+}(this, function() {/**
  * Rectangle object.
  */
 function RectF(l, t, r, b) {
@@ -149,10 +162,14 @@ GestureStroke.fromJSON = function(json) {
  * Each stroke is a sequence of timed points. A user-defined gesture can be recognized by 
  * a GestureLibrary. 
  */
-function Gesture() {
+function Gesture(strokes) {
   this.mBoundingBox = new RectF();
   this.mGestureID = this.GESTURE_ID_BASE + (++this.sGestureCount);
   this.mStrokes = [];
+  if (!strokes) return;
+  for (var i=0; i<strokes.length; ++i) {
+    this.addStroke(strokes[i]);
+  }
 }
 
 Gesture.prototype.GESTURE_ID_BASE = Date.now();
@@ -1184,4 +1201,10 @@ InstanceLearner.prototype.classify = function(sequenceType, orientationType, vec
   }
 
   return predictions.sort(InstanceLearner.compare);
-};
+};  return {
+    Gesture:       Gesture,
+    GesturePoint:  GesturePoint,
+    GestureStroke: GestureStroke,
+    GestureStore:  GestureStore
+  };
+}));
