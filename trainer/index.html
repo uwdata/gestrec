@@ -136,9 +136,12 @@ var height = canvas.height;
 
 function getXY(evt) {
   var rect = canvas.getBoundingClientRect();
+  if (evt.changedTouches) {
+    evt = evt.changedTouches[0];
+  }
   return {
-    x: evt.clientX - rect.left,
-    y: evt.clientY - rect.top
+    x: evt.pageX - rect.left,
+    y: evt.pageY - rect.top
   };
 }
 
@@ -148,28 +151,20 @@ function point() {
   return new protractor.GesturePoint(p.x/width, p.y/height, t);
 }
 
-d3.select("#canvas").on("mousedown", function() {
-  if (mode === "export") return;
-    
-  // update gesture model
+function strokeStart() {
+  if (mode === "export") return false;
   basetime = Date.now();
   points = [point()];
   GestureLibrary.drawPoints(canvas, points);
-  
-  // add listeners
-  d3.select(window).on("mousemove", move).on("mouseup", up);
-});
-
-function move() {
-  d3.event.preventDefault();
-  points.push(point()); // update gesture model
-  GestureLibrary.drawPoints(canvas, points); // update canvas
+  return true;
 }
 
-function up() {
-  d3.event.preventDefault();
+function strokeMove() {
+  points.push(point());
+  GestureLibrary.drawPoints(canvas, points);
+}
 
-  // update gesture model
+function strokeEnd() {
   var strokes = [new protractor.GestureStroke(normalize(points))];
   var gesture = new protractor.Gesture(strokes);
   
@@ -184,11 +179,41 @@ function up() {
   }
   basetime = null;
   points = null;
-
-  // remove listeners
-  d3.select(window).on("mousemove", null).on("mouseup", null);
   canvas.getContext("2d").clearRect(0, 0, width, height);
 }
+
+// ----
+
+d3.select("#canvas")
+  .on("touchstart", function() {
+    if (strokeStart()) {
+      d3.select(window).on("touchmove", move).on("touchend", touchend);
+    }
+  })
+  .on("mousedown", function() {
+    if (strokeStart()) {
+      d3.select(window).on("mousemove", move).on("mouseup", mouseup);
+    }
+  });
+
+function move() {
+  d3.event.preventDefault();
+  strokeMove();
+}
+
+function touchend() {
+  d3.event.preventDefault();
+  strokeEnd();
+  d3.select(window).on("touchmove", null).on("touchend", null);
+}
+
+function mouseup() {
+  d3.event.preventDefault();
+  strokeEnd();
+  d3.select(window).on("mousemove", null).on("mouseup", null);
+}
+
+// ---
 
 function normalize(points) {
   var xmin = Number.MAX_VALUE,
