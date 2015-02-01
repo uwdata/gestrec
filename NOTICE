@@ -1,0 +1,12 @@
+   =========================================================================
+   ==  NOTICE file corresponding to the section 4 d of                    ==
+   ==  the Apache License, Version 2.0,                                   ==
+   ==  in this case for the Android-specific code.                        ==
+   =========================================================================
+
+Android Gesture Code
+Copyright 2008-2009 The Android Open Source Project
+This product includes software derived from code developed as part of
+The Android Open Source Project (http://source.android.com).
+
+https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/gesture/
