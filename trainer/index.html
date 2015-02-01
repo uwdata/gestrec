@@ -80,7 +80,8 @@ canvas {
         <div class="header">
           Gesture Loader
           <div class="controls">
-            <button id="load">Load</button>
+            <button id="download">Download</button>
+            <button id="import">Import</button>
           </div>
         </div>
         <textarea id="json"></textarea>
@@ -113,7 +114,7 @@ d3.selectAll(".controls input").on("change", function() {
   setMode(this.value);
 });
 
-d3.select("#load").on("click", function() {
+d3.select("#import").on("click", function() {
   try {
     var json = d3.select("#json").property("value");
     lib.fromJSON(json).render();
@@ -122,6 +123,24 @@ d3.select("#load").on("click", function() {
     alert(err);
   }
 });
+
+d3.select("#download").on("click", function() {
+  try {
+    var json = d3.select("#json").property("value");
+    download("gesture.json", json);
+  } catch (err) {
+    alert(err);
+  }
+});
+
+function download(filename, text) {
+  var a = document.createElement("a");
+  a.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(text));
+  a.setAttribute("download", filename);
+  a.click();
+}
+
+// ---
 
 var lib = new GestureLibrary(d3.select("#library").node())
   .addEntry()
