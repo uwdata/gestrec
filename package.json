@@ -17,6 +17,7 @@
     "type": "git",
     "url": "http://github.com/uwdata/protractor.git"
   },
+  "main": "protractor.js",
   "devDependencies": {
     "uglify-js": "2.4.16"
   },
