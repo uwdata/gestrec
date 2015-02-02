@@ -1,4 +1,5 @@
 # protractor
+
 A JavaScript implementation of the Protractor gesture recognizer.
 
 This package provides a JavaScript version of Yang Li's [Protractor](http://yangl.org/pdf/protractor-chi2010.pdf) gesture recognizer. The code is a close port of the [Java version](https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/gesture) that ships as part of the Google Android distribution.
@@ -15,6 +16,8 @@ accessible from the command line. Run `make install` to install these modules
 into a local node_modules folder. The make install command will create the
 node_modules folder if it does not exist.
 
-### Testing
+### Gesture Training Application
 
-A gesture training application is included for testing purposes under the `trainer` folder. Simply open the `index.html` file in a browser to run.
+A gesture training application is available online at [http://uwdata.github.io/protractor/](http://uwdata.github.io/protractor/).
+
+The application is intended to work with both mouse and touch input. The code for the training application is included in this repository under the `trainer` folder. Simply open the `index.html` file in a browser to run locally.
