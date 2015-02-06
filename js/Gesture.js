@@ -5,7 +5,7 @@
  */
 function Gesture(strokes) {
   this.mBoundingBox = new RectF();
-  this.mGestureID = this.GESTURE_ID_BASE + (++this.sGestureCount);
+  this.mGestureID = Gesture.GESTURE_ID_BASE + (++Gesture.GESTURE_COUNT);
   this.mStrokes = [];
   if (!strokes) return;
   for (var i=0; i<strokes.length; ++i) {
@@ -13,9 +13,9 @@ function Gesture(strokes) {
   }
 }
 
-Gesture.prototype.GESTURE_ID_BASE = Date.now();
+Gesture.GESTURE_ID_BASE = Date.now();
 
-Gesture.prototype.sGestureCount = 0;
+Gesture.GESTURE_COUNT = 0;
 
 Gesture.prototype.clone = function() {
   var gesture = new Gesture();

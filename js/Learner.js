@@ -33,8 +33,7 @@ Learner.prototype.removeInstance = function(id) {
   var count = instances.length;
   for (var i = 0; i < count; i++) {
     var instance = instances[i];
-    if (id == instance.id) {
-      // TODO! splice...
+    if (id === instance.id) {
       instances.splice(i, 1);
       return;
     }
