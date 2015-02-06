@@ -90,6 +90,7 @@ canvas {
     </div>
   </body>
   <script>
+var MAX_SCORE = 100;
 var THRESHOLD = 2;
 var TRAIN = "train";
 var TEST = "test";
@@ -209,7 +210,7 @@ function strokeEnd() {
     clearCanvas();
   } else {
     var r = lib.recognize(gesture), msg = "None!";
-    var score = Math.min(r.length && r[0].score || 0, 200);
+    var score = Math.min(r.length && r[0].score || 0, MAX_SCORE);
     if (score > THRESHOLD) {
       msg = r[0].name + " (" + score.toFixed(2) + ")";
     }
