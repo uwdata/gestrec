@@ -4,12 +4,26 @@ var GestureLibrary = (function(d3, protractor) {
     this._el = el;
     this._store = new protractor.GestureStore();
     this._names = [];
-    this._namelut = {};
     this._thumbsize = 100;
     this._selected = null;
+    this._listeners = {};
   }
 
   var proto = GestureLibrary.prototype;
+
+  proto.on = function(name, listener) {
+    this._listeners[name] = listener;
+    return this;
+  };
+  
+  proto.fire = function(name) {
+    try {
+      if (this._listeners[name]) this._listeners[name]();
+    } catch (err) {
+      console.error(err);
+    }
+    return this;
+  };
 
   proto.setSelected = function(name) {
     this._selected = name;
@@ -18,9 +32,16 @@ var GestureLibrary = (function(d3, protractor) {
       .classed("selected", function(n) { return name === n.name; });
   };
 
+  proto._lookupName = function(name) {
+    var n = this._names;
+    for (var i=0; i<n.length; ++i) {
+      if (n[i].name === name) return i;
+    }
+    return -1;
+  };
+
   proto._nameCheck = function(name) {
-    if (this._namelut[name] == null) {
-      this._namelut[name] = this._names.length;
+    if (this._lookupName(name) < 0) {
       this._names.push({name: name});
     }
     this.setSelected(name);
@@ -31,26 +52,29 @@ var GestureLibrary = (function(d3, protractor) {
     if (newname == null || newname.length == 0) {
       throw new Error("Missing name.");
     }
-    if (this._namelut[oldname] == null) {
-      throw new Error("Unrecognized name: " + oldname);
-    }
-    if (this._namelut[newname] != null) {
+    if (this._lookupName(newname) >= 0) {
       throw new Error("Name already in use: " + newname);
     }
-    var idx = this._namelut[oldname];
-    this._namelut[newname] = idx;
-    delete this._namelut[oldname];
+    
+    var idx = this._lookupName(oldname);
+    if (idx < 0) throw new Error("Unrecognized name: " + oldname);
     this._names[idx].name = newname;
     this.setSelected(newname);
   };
   
   proto._nameRemove = function(name) {
-    if (this._namelut[name] == null) {
-      throw new Error("Unrecognized name: " + oldname);
-    }
-    var idx = this._namelut[name];
-    delete this._namelut[name];
+    var idx = this._lookupName(name);
+    if (idx < 0) throw new Error("Unrecognized name: " + name);
     this._names.splice(idx, 1);
+    if (this._selected === name) {
+      if (this._names.length > idx) {
+        this.setSelected(this._names[idx].name);
+      } else if (this._names.length > 0) {
+        this.setSelected(this._names[idx-1].name);
+      } else {
+        this._nameCheck("Gesture 1");
+      }
+    }
   };
 
   proto.recognize = function(gesture) {
@@ -75,7 +99,7 @@ var GestureLibrary = (function(d3, protractor) {
   proto.addEntry = function() {
     var name = "Gesture " + (1+this._names.length);
     this._nameCheck(name);
-    return this;
+    return this.fire("addentry");
   };
 
   proto.removeEntry = function(name) {
@@ -108,7 +132,6 @@ var GestureLibrary = (function(d3, protractor) {
     data = JSON.parse(json);
     this._store = protractor.GestureStore.fromJSON(data);
     this._names = [];
-    this._namelut = {};
     this._selected = null;
     for (var i=0; i<data.names.length; ++i) {
       this._nameCheck(data.names[i]);
@@ -225,7 +248,7 @@ var GestureLibrary = (function(d3, protractor) {
         lib.render();
       })
 
-    return lib;
+    return lib.fire("render");
   };
   
   GestureLibrary.drawPoints = function(canvas, points) {
@@ -240,6 +263,7 @@ var GestureLibrary = (function(d3, protractor) {
     g.lineCap = "round";
     g.lineJoin = "round";
     g.strokeStyle = "black";
+    g.fillStyle = "black";
 
     g.beginPath();
     g.moveTo(w*points[0].x, h*points[0].y);
@@ -247,6 +271,10 @@ var GestureLibrary = (function(d3, protractor) {
       g.lineTo(w*points[i].x, h*points[i].y);
     }
     g.stroke();
+
+    g.beginPath();
+    g.arc(w*points[0].x, h*points[0].y, 5, 0, 2*Math.PI);
+    g.fill();
   };
 
   GestureLibrary.drawGesture = function(canvas, gesture) {
@@ -258,6 +286,7 @@ var GestureLibrary = (function(d3, protractor) {
     g.clearRect(0, 0, w, h);
     g.lineWidth = 3;
     g.lineCap = "round";
+    g.fillStyle = "black";
 
     for (var s=0; s<strokes.length; ++s) {
       var points = strokes[s].points;
@@ -273,6 +302,10 @@ var GestureLibrary = (function(d3, protractor) {
           Math.floor(start * frac)
         );
       }
+      
+      g.beginPath();
+      g.arc(w*points[0], h*points[1], 4, 0, 2*Math.PI);
+      g.fill();
     }
   };
   
