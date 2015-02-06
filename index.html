@@ -176,6 +176,7 @@ function clearCanvas() {
   if (canvas) {
     canvas.getContext("2d").clearRect(0, 0, width, height);
   }
+  d3.select("#message").text("");
 }
 
 function point() {
@@ -186,10 +187,7 @@ function point() {
 
 function strokeStart() {
   if (mode === EXPORT) return false;
-  if (mode === TEST) {
-    canvas.getContext("2d").clearRect(0, 0, width, height);
-    d3.select("#message").text("");
-  }
+  if (mode === TEST) clearCanvas();
   basetime = Date.now();
   points = [point()];
   GestureLibrary.drawPoints(canvas, points);

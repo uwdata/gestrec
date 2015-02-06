@@ -164,7 +164,7 @@ GestureStroke.fromJSON = function(json) {
  */
 function Gesture(strokes) {
   this.mBoundingBox = new RectF();
-  this.mGestureID = this.GESTURE_ID_BASE + (++this.sGestureCount);
+  this.mGestureID = Gesture.GESTURE_ID_BASE + (++Gesture.GESTURE_COUNT);
   this.mStrokes = [];
   if (!strokes) return;
   for (var i=0; i<strokes.length; ++i) {
@@ -172,9 +172,9 @@ function Gesture(strokes) {
   }
 }
 
-Gesture.prototype.GESTURE_ID_BASE = Date.now();
+Gesture.GESTURE_ID_BASE = Date.now();
 
-Gesture.prototype.sGestureCount = 0;
+Gesture.GESTURE_COUNT = 0;
 
 Gesture.prototype.clone = function() {
   var gesture = new Gesture();
@@ -1113,9 +1113,9 @@ Learner.prototype.removeInstance = function(id) {
   var count = instances.length;
   for (var i = 0; i < count; i++) {
     var instance = instances[i];
-    if (id == instance.id) {
-      // TODO! splice...
+    if (id === instance.id) {
       instances.splice(i, 1);
+      console.log("REMOVE INSTANCE", id, JSON.stringify(instances));
       return;
     }
   }
