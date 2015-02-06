@@ -2,6 +2,7 @@ var GestureLibrary = (function(d3, protractor) {
 
   function GestureLibrary(el) {
     this._el = el;
+    this._id = 1;
     this._store = new protractor.GestureStore();
     this._names = [];
     this._thumbsize = 100;
@@ -66,13 +67,14 @@ var GestureLibrary = (function(d3, protractor) {
     var idx = this._lookupName(name);
     if (idx < 0) throw new Error("Unrecognized name: " + name);
     this._names.splice(idx, 1);
+    this.fire("remove");
     if (this._selected === name) {
       if (this._names.length > idx) {
         this.setSelected(this._names[idx].name);
       } else if (this._names.length > 0) {
         this.setSelected(this._names[idx-1].name);
       } else {
-        this._nameCheck("Gesture 1");
+        this.addEntry();
       }
     }
   };
@@ -97,7 +99,7 @@ var GestureLibrary = (function(d3, protractor) {
   };
 
   proto.addEntry = function() {
-    var name = "Gesture " + (1+this._names.length);
+    var name = "Gesture " + (this._id++);
     this._nameCheck(name);
     return this.fire("addentry");
   };
