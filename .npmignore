@@ -1,3 +1,4 @@
 node_modules/
 trainer/
+bower.json
 .DS_Store
