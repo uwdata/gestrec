@@ -1,0 +1,39 @@
+{
+  "name": "gestrec",
+  "version": "1.0.0",
+  "description": "JavaScript Gesture Recognizer using the Protractor algorithm.",
+  "keywords": [
+    "gesture",
+    "recognizer",
+    "sketch",
+    "touch",
+    "javascript",
+    "protractor"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/uwdata/gestrec.git"
+  },
+  "homepage": "http://uwdata.github.io/gestrec/",
+  "author": {
+    "name": "UW Interactive Data Lab",
+    "homepage": "http://idl.cs.washington.edu"
+  },
+  "license": "BSD-3-Clause",
+  "main": "gestrec.js",
+  "scripts": [
+    "gestrec.js"
+  ],
+  "ignore": [
+    ".DS_Store",
+    ".git",
+    ".gitignore",
+    ".npmignore",
+    ".spmignore",
+    ".travis.yml",
+    "gulpfile.js",
+    "node_modules",
+    "package.json",
+    "src"
+    ]
+}
