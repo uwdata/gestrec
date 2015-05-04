@@ -1,10 +1,12 @@
+var Rect = require('./Rect');
+
 /**
  * A gesture is a hand-drawn shape on a touch screen. It can have one or multiple strokes.
  * Each stroke is a sequence of timed points. A user-defined gesture can be recognized by 
  * a GestureLibrary. 
  */
 function Gesture(strokes) {
-  this.mBoundingBox = new RectF();
+  this.mBoundingBox = new Rect();
   this.mGestureID = Gesture.GESTURE_ID_BASE + (++Gesture.GESTURE_COUNT);
   this.mStrokes = [];
   if (!strokes) return;
@@ -116,3 +118,5 @@ Gesture.fromJSON = function(json) {
   }
   return gesture;
 };
+
+module.exports = Gesture;

@@ -1,7 +1,7 @@
 /**
  * An oriented bounding box
  */
-function OrientedBoundingBox(angle, cx, cy, w, h) {
+module.exports = function OrientedBoundingBox(angle, cx, cy, w, h) {
   this.orientation = angle;
   this.width = w;
   this.height = h;
@@ -9,4 +9,4 @@ function OrientedBoundingBox(angle, cx, cy, w, h) {
   this.centerY = cy;
   var ratio = w / h;
   this.squareness = ratio > 1 ? (1/ratio) : ratio;
-}
+};

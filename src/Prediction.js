@@ -6,3 +6,5 @@ function Prediction(label, predictionScore) {
 Prediction.prototype.toString = function() {
   return this.name;
 };
+
+module.exports = Prediction;

@@ -1,3 +1,5 @@
+// A library managing a set of gesture classes and training examples.
+// Also supports rendering of library contents to a web page.
 var GestureLibrary = (function(d3, protractor) {
 
   function GestureLibrary(el) {
@@ -12,20 +14,23 @@ var GestureLibrary = (function(d3, protractor) {
 
   var proto = GestureLibrary.prototype;
 
-  proto.on = function(name, listener) {
-    this._listeners[name] = listener;
+  // Add an event listener.
+  proto.on = function(type, listener) {
+    this._listeners[type] = listener;
     return this;
   };
-  
-  proto.fire = function(name) {
+
+  // Fire an event with the given event type.
+  proto.fire = function(type) {
     try {
-      if (this._listeners[name]) this._listeners[name]();
+      if (this._listeners[type]) this._listeners[type]();
     } catch (err) {
       console.error(err);
     }
     return this;
   };
 
+  // Set the currently selected gesture class.
   proto.setSelected = function(name) {
     this._selected = name;
     d3.select(this._el)
@@ -33,6 +38,7 @@ var GestureLibrary = (function(d3, protractor) {
       .classed("selected", function(n) { return name === n.name; });
   };
 
+  // Lookup the gesture class matching the given name.
   proto._lookupName = function(name) {
     var n = this._names;
     for (var i=0; i<n.length; ++i) {
@@ -41,6 +47,8 @@ var GestureLibrary = (function(d3, protractor) {
     return -1;
   };
 
+  // Set the given name as the selected gesture class.
+  // Add the name to the library as needed.
   proto._nameCheck = function(name) {
     if (this._lookupName(name) < 0) {
       this._names.push({name: name});
@@ -48,7 +56,8 @@ var GestureLibrary = (function(d3, protractor) {
     this.setSelected(name);
     return name;
   };
-  
+
+  // Rename a gesture class from oldname to newname.
   proto._nameUpdate = function(oldname, newname) {
     if (newname == null || newname.length == 0) {
       throw new Error("Missing name.");
@@ -62,7 +71,8 @@ var GestureLibrary = (function(d3, protractor) {
     this._names[idx].name = newname;
     this.setSelected(newname);
   };
-  
+
+  // Remove the gesture class with the given name.
   proto._nameRemove = function(name) {
     var idx = this._lookupName(name);
     if (idx < 0) throw new Error("Unrecognized name: " + name);
@@ -79,10 +89,12 @@ var GestureLibrary = (function(d3, protractor) {
     }
   };
 
+  // Perform gesture recognition for the input gesture.
   proto.recognize = function(gesture) {
     return this._store.recognize(gesture);
   };
 
+  // Add a gesture as an example for the named gesture class.
   proto.addGesture = function(name, gesture) {
     if (gesture == null) {
       gesture = name;
@@ -92,24 +104,28 @@ var GestureLibrary = (function(d3, protractor) {
     this._store.addGesture(name, gesture);
     return this;
   };
-  
+
+  // Remove a gesture as an example for the named gesture class.
   proto.removeGesture = function(name, gesture) {
     this._store.removeGesture(name, gesture);
     return this;
   };
 
+  // Add a new gesture class entry.
   proto.addEntry = function() {
     var name = "Gesture " + (this._id++);
     this._nameCheck(name);
     return this.fire("addentry");
   };
 
+  // Remove the named gesture class entry.
   proto.removeEntry = function(name) {
     this._nameRemove(name);
     this._store.removeEntry(name);
     return this;
   };
-  
+
+  // Rename a gesture class entry.
   proto.renameEntry = function(oldname, newname) {
     this._nameUpdate(oldname, newname);
     var gestures = this._store.getGestures(oldname) || [];
@@ -119,7 +135,8 @@ var GestureLibrary = (function(d3, protractor) {
     }
     return this;
   };
-  
+
+  // Serialize the library to JSON.
   proto.toJSON = function() {
     var json = this._store.toJSON();
     json.names = this._names.map(function(n) { return n.name; });
@@ -129,7 +146,8 @@ var GestureLibrary = (function(d3, protractor) {
         : val;
     });
   };
-  
+
+  // Read in a library as a serialized JSON file.
   proto.fromJSON = function(json) {
     data = JSON.parse(json);
     this._store = protractor.GestureStore.fromJSON(data);
@@ -140,7 +158,8 @@ var GestureLibrary = (function(d3, protractor) {
     }
     return this;
   };
-  
+
+  // Render the library within a web page.
   proto.render = function() {
     var lib = this;
 
@@ -252,7 +271,8 @@ var GestureLibrary = (function(d3, protractor) {
 
     return lib.fire("render");
   };
-  
+
+  // Helper method for drawing points of an input gesture.
   GestureLibrary.drawPoints = function(canvas, points) {
     var g = canvas.getContext("2d"),
         w = canvas.width,
@@ -279,6 +299,7 @@ var GestureLibrary = (function(d3, protractor) {
     g.fill();
   };
 
+  // Helper method for drawing an input gesture.
   GestureLibrary.drawGesture = function(canvas, gesture) {
     var g = canvas.getContext("2d"),
         w = canvas.width,
@@ -310,7 +331,8 @@ var GestureLibrary = (function(d3, protractor) {
       g.fill();
     }
   };
-  
+
+  // Helper method for drawing a colored line.
   function drawLine(g, x1, y1, x2, y2, gray) {
     g.strokeStyle = "rgb("+[gray,gray,gray].join(",")+")";
     g.beginPath();

@@ -8,23 +8,23 @@
     "sketch",
     "touch"
   ],
-  "homepage": "http://uwdata.github.io/protractor/",
-  "author": {
-    "name": "Jeffrey Heer",
-    "url": "http://idl.cs.washington.edu"
-  },
   "repository": {
     "type": "git",
     "url": "http://github.com/uwdata/protractor.git"
   },
-  "main": "protractor.js",
-  "devDependencies": {
-    "uglify-js": "2.4.16"
+  "homepage": "http://uwdata.github.io/protractor/",
+  "author": {
+    "name": "UW Interactive Data Lab",
+    "url": "http://idl.cs.washington.edu"
   },
-  "licenses": [
-    {
-      "type": "BSD",
-      "url": "https://github.com/uwdata/protractor/blob/master/LICENSE"
-    }
-  ]
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "browserify": "^9.0.8",
+    "gulp": "^3.8.11",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.2.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "main": "src/index.js"
 }

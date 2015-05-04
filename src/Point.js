@@ -1,7 +1,7 @@
 /**
  * A timed point of a gesture stroke. Multiple points form a stroke.
  */
-function GesturePoint(x, y, t) {
+module.exports = function Point(x, y, t) {
   if (x instanceof Object) {
     var o = x;
     this.x = o.x;
@@ -12,4 +12,4 @@ function GesturePoint(x, y, t) {
     this.y = y;
     this.timestamp = t;
   }
-}
+};

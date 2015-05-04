@@ -1,27 +1,19 @@
+var Constants = require('./Constants');
+var Gesture = require('./Gesture');
+var Instance = require('./Instance');
+var InstanceLearner = require('./InstanceLearner');
+
 /**
  * GestureStore maintains gesture examples and makes predictions on a new
- * gesture
+ * gesture.
  */
 function GestureStore() {
-  this.mSequenceType = GestureStore.SEQUENCE_SENSITIVE;
-  this.mOrientationStyle = GestureStore.ORIENTATION_SENSITIVE_4;
+  this.mSequenceType = Constants.SEQUENCE_SENSITIVE;
+  this.mOrientationStyle = Constants.ORIENTATION_SENSITIVE_4;
   this.mClassifier = new InstanceLearner();
   this.mChanged = false;
   this.mNamedGestures = {};
 }
-
-GestureStore.SEQUENCE_INVARIANT = 1;
-// when SEQUENCE_SENSITIVE is used, only single stroke gestures are currently allowed
-GestureStore.SEQUENCE_SENSITIVE = 2;
-
-// ORIENTATION_SENSITIVE and ORIENTATION_INVARIANT are only for SEQUENCE_SENSITIVE gestures
-GestureStore.ORIENTATION_INVARIANT = 1;
-// at most 2 directions can be recognized
-GestureStore.ORIENTATION_SENSITIVE = 2;
-// at most 4 directions can be recognized
-GestureStore.ORIENTATION_SENSITIVE_4 = 4;
-// at most 8 directions can be recognized
-GestureStore.ORIENTATION_SENSITIVE_8 = 8;
 
 /**
  * Specify how the gesture library will handle orientation. 
@@ -185,3 +177,5 @@ GestureStore.fromJSON = function(json) {
   }
   return gs;
 };
+
+module.exports = GestureStore;

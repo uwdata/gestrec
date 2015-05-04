@@ -1,3 +1,5 @@
+var OrientedBoundingBox = require('./OrientedBoundingBox');
+
 /**
  * Utility functions for gesture processing & analysis, including methods for:
  * <ul> 
@@ -8,12 +10,12 @@
  * distances between two gestures).
  * </ul>
  */
-var GestureUtils = {};
+var Utils = {};
 
-GestureUtils.CALING_THRESHOLD = 0.26;
-GestureUtils.NONUNIFORM_SCALE = Math.sqrt(2);
+Utils.SCALING_THRESHOLD = 0.26;
+Utils.NONUNIFORM_SCALE = Math.sqrt(2);
 
-GestureUtils.zeroes = function(n) {
+Utils.zeroes = function(n) {
   var array = Array(n);
   for (var i=0; i<n; ++i) array[i] = 0;
   return array;
@@ -32,9 +34,9 @@ GestureUtils.zeroes = function(n) {
  *         as a 1D array. The float at index i represents the grayscale 
  *         value at pixel [i%bitmapSize, i/bitmapSize] 
  */
-GestureUtils.spatialSampling = function(gesture, bitmapSize, keepAspectRatio) {
+Utils.spatialSampling = function(gesture, bitmapSize, keepAspectRatio) {
   var targetPatchSize = bitmapSize - 1;
-  var sample = GestureUtils.zeroes(bitmapSize * bitmapSize);
+  var sample = Utils.zeroes(bitmapSize * bitmapSize);
   var rect = gesture.getBoundingBox();
   var gestureWidth = rect.width();
   var gestureHeight = rect.height();
@@ -51,16 +53,16 @@ GestureUtils.spatialSampling = function(gesture, bitmapSize, keepAspectRatio) {
     if (aspectRatio > 1) {
       aspectRation = 1 / aspectRatio;
     }
-    if (aspectRatio < GestureUtils.SCALING_THRESHOLD) {
+    if (aspectRatio < Utils.SCALING_THRESHOLD) {
       scale = sx < sy ? sx : sy;
       sx = scale;
       sy = scale;
     } else {
       if (sx > sy) {
-        scale = sy * GestureUtils.NONUNIFORM_SCALE;
+        scale = sy * Utils.NONUNIFORM_SCALE;
         if (scale < sx) { sx = scale; }
       } else {
-        scale = sx * GestureUtils.NONUNIFORM_SCALE; 
+        scale = sx * Utils.NONUNIFORM_SCALE; 
         if (scale < sy) { sy = scale; }
       }
     }
@@ -96,7 +98,7 @@ GestureUtils.spatialSampling = function(gesture, bitmapSize, keepAspectRatio) {
       if (segmentStartY > targetPatchSize) {
         segmentStartY = targetPatchSize;
       }
-      plot(segmentStartX, segmentStartY, sample, bitmapSize);
+      Utils.plot(segmentStartX, segmentStartY, sample, bitmapSize);
       if (segmentEndX != -1) {
         // Evaluate horizontally
         if (segmentEndX > segmentStartX) {
@@ -142,7 +144,7 @@ GestureUtils.spatialSampling = function(gesture, bitmapSize, keepAspectRatio) {
   return sample;
 };
 
-GestureUtils.plot = function(x, y, sample, sampleSize) {
+Utils.plot = function(x, y, sample, sampleSize) {
   x = x < 0 ? 0 : x;
   y = y < 0 ? 0 : y;
   var xFloor = Math.floor(x);
@@ -151,9 +153,9 @@ GestureUtils.plot = function(x, y, sample, sampleSize) {
   var yCeiling = Math.ceil(y);
   
   // if it's an integer
-  if (x == xFloor && y == yFloor) {
+  if (x === xFloor && y === yFloor) {
     var index = yCeiling * sampleSize + xCeiling;
-    if (sample[index] < 1){
+    if (sample[index] < 1) {
       sample[index] = 1;
     }
   } else {
@@ -169,25 +171,25 @@ GestureUtils.plot = function(x, y, sample, sampleSize) {
     
     var value = topLeft / sum;
     var index = yFloor * sampleSize + xFloor;
-    if (value > sample[index]){
+    if (value > sample[index]) {
       sample[index] = value;
     }
     
     value = topRight / sum;
     index = yFloor * sampleSize + xCeiling;
-    if (value > sample[index]){
+    if (value > sample[index]) {
       sample[index] = value;
     }
     
     value = btmLeft / sum;
     index = yCeiling * sampleSize + xFloor;
-    if (value > sample[index]){
+    if (value > sample[index]) {
       sample[index] = value;
     }
     
     value = btmRight / sum;
     index = yCeiling * sampleSize + xCeiling;
-    if (value > sample[index]){
+    if (value > sample[index]) {
       sample[index] = value;
     }
   }
@@ -201,7 +203,7 @@ GestureUtils.plot = function(x, y, sample, sampleSize) {
  * @param numPoints the number of points
  * @return the sampled points in the form of [x1, y1, x2, y2, ..., xn, yn]
  */
-GestureUtils.temporalSampling = function(stroke, numPoints) {
+Utils.temporalSampling = function(stroke, numPoints) {
   var increment = stroke.length / (numPoints - 1);
   var vectorLength = numPoints * 2;
   var vector = Array(vectorLength);
@@ -263,7 +265,7 @@ GestureUtils.temporalSampling = function(stroke, numPoints) {
  * @param points the points in the form of [x1, y1, x2, y2, ..., xn, yn]
  * @return the centroid
  */
-GestureUtils.computeCentroid = function(points) {
+Utils.computeCentroid = function(points) {
   var centerX = 0;
   var centerY = 0;
   var count = points.length;
@@ -284,7 +286,7 @@ GestureUtils.computeCentroid = function(points) {
  * @param points the points in the form of [x1, y1, x2, y2, ..., xn, yn]
  * @return the variance-covariance matrix
  */
-GestureUtils.computeCoVariance = function(points) {
+Utils.computeCoVariance = function(points) {
   var array = [[0,0], [0,0]];
   var count = points.length;
   for (var i=0; i<count; ++i) {
@@ -303,7 +305,7 @@ GestureUtils.computeCoVariance = function(points) {
   return array;
 };
 
-GestureUtils.computeTotalLength = function(points) {
+Utils.computeTotalLength = function(points) {
   var sum = 0;
   var count = points.length - 4;
   for (var i=0; i<count; i+=2) {
@@ -314,14 +316,14 @@ GestureUtils.computeTotalLength = function(points) {
   return sum;
 };
 
-GestureUtils.computeStraightness = function(points) {
-  var totalLen = GestureUtils.computeTotalLength(points);
+Utils.computeStraightness = function(points) {
+  var totalLen = Utils.computeTotalLength(points);
   var dx = points[2] - points[0];
   var dy = points[3] - points[1];
   return Math.sqrt(dx*dx + dy*dy) / totalLen;
 };
 
-GestureUtils.computeStraightness = function(points, totalLen) {
+Utils.computeStraightness = function(points, totalLen) {
   var dx = points[2] - points[0];
   var dy = points[3] - points[1];
   return Math.sqrt(dx*dx + dy*dy) / totalLen;
@@ -334,7 +336,7 @@ GestureUtils.computeStraightness = function(points, totalLen) {
  * @param vector2
  * @return the distance
  */
-GestureUtils.squaredEuclideanDistance = function(vector1, vector2) {
+Utils.squaredEuclideanDistance = function(vector1, vector2) {
   var squaredDistance = 0;
   var size = vector1.length;
   for (var i=0; i<size; ++i) {
@@ -351,7 +353,7 @@ GestureUtils.squaredEuclideanDistance = function(vector1, vector2) {
  * @param vector2
  * @return the distance between 0 and Math.PI
  */
-GestureUtils.cosineDistance = function(vector1, vector2) {
+Utils.cosineDistance = function(vector1, vector2) {
   var sum = 0;
   var len = vector1.length;
   for (var i=0; i<len; ++i) {
@@ -368,7 +370,7 @@ GestureUtils.cosineDistance = function(vector1, vector2) {
  * @param numOrientations the maximum number of orientation allowed
  * @return the distance between the two instances (between 0 and Math.PI)
  */
-GestureUtils.minimumCosineDistance = function(vector1, vector2, numOrientations) {
+Utils.minimumCosineDistance = function(vector1, vector2, numOrientations) {
   var len = vector1.length;
   var a = 0;
   var b = 0;
@@ -397,7 +399,7 @@ GestureUtils.minimumCosineDistance = function(vector1, vector2, numOrientations)
  * @param originalPoints
  * @return an oriented bounding box
  */
-GestureUtils.computeOrientedBoundingBoxPoints = function(originalPoints) {
+Utils.computeOrientedBoundingBoxPoints = function(originalPoints) {
   var count = originalPoints.length;
   var points = Array(count * 2);
   for (var i = 0; i < count; i++) {
@@ -406,8 +408,8 @@ GestureUtils.computeOrientedBoundingBoxPoints = function(originalPoints) {
       points[index] = point.x;
       points[index + 1] = point.y;
   }
-  var meanVector = GestureUtils.computeCentroid(points);
-  return GestureUtils.computeOrientedBoundingBoxFull(points, meanVector);
+  var meanVector = Utils.computeCentroid(points);
+  return Utils.computeOrientedBoundingBoxFull(points, meanVector);
 };
 
 /**
@@ -416,28 +418,28 @@ GestureUtils.computeOrientedBoundingBoxPoints = function(originalPoints) {
  * @param originalPoints
  * @return an oriented bounding box
  */
-GestureUtils.computeOrientedBoundingBox = function(originalPoints) {
+Utils.computeOrientedBoundingBox = function(originalPoints) {
   var size = originalPoints.length;
   var points = Array(size);
   for (var i = 0; i < size; i++) {
     points[i] = originalPoints[i];
   }
-  var meanVector = GestureUtils.computeCentroid(points);
-  return GestureUtils.computeOrientedBoundingBoxFull(points, meanVector);
+  var meanVector = Utils.computeCentroid(points);
+  return Utils.computeOrientedBoundingBoxFull(points, meanVector);
 };
 
-GestureUtils.computeOrientedBoundingBoxFull = function(points, centroid) {
-  GestureUtils.translate(points, -centroid[0], -centroid[1]);
+Utils.computeOrientedBoundingBoxFull = function(points, centroid) {
+  Utils.translate(points, -centroid[0], -centroid[1]);
 
-  var array = GestureUtils.computeCoVariance(points);
-  var targetVector = GestureUtils.computeOrientation(array);
+  var array = Utils.computeCoVariance(points);
+  var targetVector = Utils.computeOrientation(array);
 
   var angle;
   if (targetVector[0] == 0 && targetVector[1] == 0) {
     angle = -Math.PI/2;
   } else { // -PI<alpha<PI
     angle = Math.atan2(targetVector[1], targetVector[0]);
-    GestureUtils.rotate(points, -angle);
+    Utils.rotate(points, -angle);
   }
 
   var minx = Number.MAX_VALUE;
@@ -470,7 +472,7 @@ GestureUtils.computeOrientedBoundingBoxFull = function(points, centroid) {
   );
 };
 
-GestureUtils.computeOrientation = function(covarianceMatrix) {
+Utils.computeOrientation = function(covarianceMatrix) {
   var targetVector = [0, 0];
   if (covarianceMatrix[0][1] == 0 || covarianceMatrix[1][0] == 0) {
     targetVector[0] = 1;
@@ -495,8 +497,7 @@ GestureUtils.computeOrientation = function(covarianceMatrix) {
   return targetVector;
 };
 
-
-GestureUtils.rotate = function(points, angle) {
+Utils.rotate = function(points, angle) {
   var cos = Math.cos(angle);
   var sin = Math.sin(angle);
   var size = points.length;
@@ -509,7 +510,7 @@ GestureUtils.rotate = function(points, angle) {
   return points;
 };
 
-GestureUtils.translate = function(points, dx, dy) {
+Utils.translate = function(points, dx, dy) {
   var size = points.length;
   for (var i = 0; i < size; i += 2) {
     points[i] += dx;
@@ -518,7 +519,7 @@ GestureUtils.translate = function(points, dx, dy) {
   return points;
 };
 
-GestureUtils.scale = function(points, sx, sy) {
+Utils.scale = function(points, sx, sy) {
   var size = points.length;
   for (var i = 0; i < size; i += 2) {
     points[i] *= sx;
@@ -526,3 +527,5 @@ GestureUtils.scale = function(points, sx, sy) {
   }
   return points;
 };
+
+module.exports = Utils;

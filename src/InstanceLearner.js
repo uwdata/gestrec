@@ -1,3 +1,8 @@
+var Prediction = require('./Prediction');
+var Constants = require('./Constants');
+var Learner = require('./Learner');
+var Utils = require('./Utils');
+
 /**
  * An implementation of an instance-based learner
  */
@@ -31,10 +36,10 @@ InstanceLearner.prototype.classify = function(sequenceType, orientationType, vec
       continue;
     }
     var distance;
-    if (sequenceType == GestureStore.SEQUENCE_SENSITIVE) {
-      distance = GestureUtils.minimumCosineDistance(sample.vector, vector, orientationType);
+    if (sequenceType == Constants.SEQUENCE_SENSITIVE) {
+      distance = Utils.minimumCosineDistance(sample.vector, vector, orientationType);
     } else {
-      distance = GestureUtils.squaredEuclideanDistance(sample.vector, vector);
+      distance = Utils.squaredEuclideanDistance(sample.vector, vector);
     }
     var weight;
     if (distance == 0) {
@@ -55,3 +60,5 @@ InstanceLearner.prototype.classify = function(sequenceType, orientationType, vec
 
   return predictions.sort(InstanceLearner.compare);
 };
+
+module.exports = InstanceLearner;

@@ -1,3 +1,6 @@
+var Constants = require('./Constants');
+var Utils = require('./Utils');
+
 /**
  * An instance represents a sample if the label is available or a query if the
  * label is null.
@@ -7,23 +10,6 @@ function Instance(id, sample, sampleName) {
   this.vector = sample;
   this.label = sampleName;
 }
-
-Instance.SEQUENCE_SAMPLE_SIZE = 16;
-
-Instance.PATCH_SAMPLE_SIZE = 16;
-
-Instance.ORIENTATIONS = [
-  0,
-  (Math.PI / 4),
-  (Math.PI / 2),
-  (Math.PI * 3 / 4),
-  Math.PI,
-  -0,
-  (-Math.PI / 4),
-  (-Math.PI / 2),
-  (-Math.PI * 3 / 4),
-  -Math.PI
-];
 
 Instance.prototype.normalize = function() {
   var sample = this.vector;
@@ -50,7 +36,7 @@ Instance.prototype.normalize = function() {
 Instance.createInstance = function(sequenceType, orientationType, gesture, label) {
   var pts;
   var instance;
-  if (sequenceType == GestureStore.SEQUENCE_SENSITIVE) {
+  if (sequenceType === Constants.SEQUENCE_SENSITIVE) {
     pts = Instance.temporalSampler(orientationType, gesture);
     instance = new Instance(gesture.getID(), pts, label);
     instance.normalize();
@@ -62,28 +48,30 @@ Instance.createInstance = function(sequenceType, orientationType, gesture, label
 };
 
 Instance.spatialSampler = function(gesture) {
-  return GestureUtils.spatialSampling(gesture, PATCH_SAMPLE_SIZE, false);
+  return Utils.spatialSampling(gesture, Constants.PATCH_SAMPLE_SIZE, false);
 };
 
 Instance.temporalSampler = function(orientationType, gesture) {
-  var pts = GestureUtils.temporalSampling(gesture.getStrokes()[0],
-          Instance.SEQUENCE_SAMPLE_SIZE);
-  var center = GestureUtils.computeCentroid(pts);
+  var pts = Utils.temporalSampling(gesture.getStrokes()[0],
+          Constants.SEQUENCE_SAMPLE_SIZE);
+  var center = Utils.computeCentroid(pts);
   var orientation = Math.atan2(pts[1] - center[1], pts[0] - center[0]);
 
   var adjustment = -orientation;
-  if (orientationType != GestureStore.ORIENTATION_INVARIANT) {
-    var count = Instance.ORIENTATIONS.length;
+  if (orientationType != Constants.ORIENTATION_INVARIANT) {
+    var count = Constants.ORIENTATIONS.length;
     for (var i = 0; i < count; i++) {
-      var delta = Instance.ORIENTATIONS[i] - orientation;
+      var delta = Constants.ORIENTATIONS[i] - orientation;
       if (Math.abs(delta) < Math.abs(adjustment)) {
         adjustment = delta;
       }
     }
   }
 
-  GestureUtils.translate(pts, -center[0], -center[1]);
-  GestureUtils.rotate(pts, adjustment);
+  Utils.translate(pts, -center[0], -center[1]);
+  Utils.rotate(pts, adjustment);
 
   return pts;
 };
+
+module.exports = Instance;

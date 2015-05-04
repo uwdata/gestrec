@@ -64,3 +64,5 @@ Learner.prototype.removeInstances = function(name) {
 
 Learner.prototype.classify = function(sequenceType, orientationType, vector) {
 };
+
+module.exports = Learner;

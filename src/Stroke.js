@@ -1,8 +1,11 @@
+var Rect = require('./Rect');
+var Point = require('./Point');
+
 /**
  * A gesture stroke started on a touch down and ended on a touch up. A stroke
  * consists of a sequence of timed points. One or multiple strokes form a gesture.
  */
-function GestureStroke(points) {
+function Stroke(points) {
   if (points == null) return;
 
   var count = points.length;
@@ -19,7 +22,7 @@ function GestureStroke(points) {
     times[index] = p.timestamp;
 
     if (bx == null) {
-      bx = new RectF(p.x, p.y, p.x, p.y);
+      bx = new Rect(p.x, p.y, p.x, p.y);
       len = 0;
     } else {
       var dx = p.x - tmpPoints[(i - 1) * 2];
@@ -36,8 +39,8 @@ function GestureStroke(points) {
   this.length = len;
 }
 
-GestureStroke.prototype.clone = function() {
-  var stroke = new GestureStroke();
+Stroke.prototype.clone = function() {
+  var stroke = new Stroke();
   stroke.boundingBox = this.boundingBox.clone();
   stroke.length = this.length;
   stroke.points = this.points.slice();
@@ -47,7 +50,7 @@ GestureStroke.prototype.clone = function() {
 
 // ---
 
-GestureStroke.prototype.toJSON = function() {
+Stroke.prototype.toJSON = function() {
   var points = [];
   var count = this.points.length;
   for (var i=0; i<count; i+=2) {
@@ -60,10 +63,12 @@ GestureStroke.prototype.toJSON = function() {
   return points;
 };
 
-GestureStroke.fromJSON = function(json) {
+Stroke.fromJSON = function(json) {
   var points = [];
   for (var i=0; i<json.length; ++i) {
-    points.push(new GesturePoint(json[i]));
+    points.push(new Point(json[i]));
   }
-  return new GestureStroke(points);
+  return new Stroke(points);
 };
+
+module.exports = Stroke;
