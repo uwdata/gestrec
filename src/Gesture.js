@@ -1,4 +1,5 @@
 var Rect = require('./Rect');
+var Stroke = require('./Stroke');
 
 /**
  * A gesture is a hand-drawn shape on a touch screen. It can have one or multiple strokes.
@@ -114,7 +115,7 @@ Gesture.prototype.toJSON = function() {
 Gesture.fromJSON = function(json) {
   var gesture = new Gesture();
   for (var i=0; i<json.length; ++i) {
-    gesture.addStroke(GestureStroke.fromJSON(json[i]));
+    gesture.addStroke(Stroke.fromJSON(json[i]));
   }
   return gesture;
 };

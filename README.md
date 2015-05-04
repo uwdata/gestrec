@@ -12,7 +12,35 @@ simply `npm install protractor` or include protractor as a dependency in your pa
 ### Usage
 
 ```javascript
+var protractor = require('protractor');
+var store = new protractor.GestureStore();
 
+// a stroke is a collection of timestamped points
+var stroke = new protractor.Stroke([
+  //  protractor.Point( x, y, t)
+  new protractor.Point( 2, 5, 1),
+  new protractor.Point( 2, 9, 2)
+]);
+// a gesture is a collection of one or more strokes
+var gesture = new protractor.Gesture([stroke]);
+
+// build a recognizer by providing gesture training examples
+// repeat to provide multiple examples for each named gesture class
+store.addGesture("line_down", gesture);
+
+// gestures can be read from JSON-style objects
+var down = protractor.Gesture.fromJSON([[{x:4, y:1, t:1}, {x:4, y:3, t:2}]]),
+    left = protractor.Gesture.fromJSON([[{x:4, y:1, t:1}, {x:8, y:1, t:2}]]);
+
+// recognize a matching (high-scoring) gesture
+var prediction = store.recognize(down);
+console.log(JSON.stringify(prediction));
+// [{"name":"line_down","score":67108864}]
+
+// recognize a non-matching (low-scoring) gesture
+prediction = store.recognize(left);
+console.log(JSON.stringify(prediction));
+// [{"name":"line_down","score":0.6366197723675814}]
 ```
 
 ### Gesture Training Application
