@@ -1,11 +1,11 @@
 // A library managing a set of gesture classes and training examples.
 // Also supports rendering of library contents to a web page.
-var GestureLibrary = (function(d3, protractor) {
+var GestureLibrary = (function(d3, gestrec) {
 
   function GestureLibrary(el) {
     this._el = el;
     this._id = 1;
-    this._store = new protractor.GestureStore();
+    this._store = new gestrec.GestureStore();
     this._names = [];
     this._thumbsize = 100;
     this._selected = null;
@@ -150,7 +150,7 @@ var GestureLibrary = (function(d3, protractor) {
   // Read in a library as a serialized JSON file.
   proto.fromJSON = function(json) {
     data = JSON.parse(json);
-    this._store = protractor.GestureStore.fromJSON(data);
+    this._store = gestrec.GestureStore.fromJSON(data);
     this._names = [];
     this._selected = null;
     for (var i=0; i<data.names.length; ++i) {
@@ -343,4 +343,4 @@ var GestureLibrary = (function(d3, protractor) {
 
   return GestureLibrary;
 
-})(d3, protractor);
+})(d3, gestrec);

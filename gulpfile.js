@@ -8,7 +8,7 @@ var gulp = require('gulp'),
 function browser() {
   return browserify({
       entries: ['./src/'],
-      standalone: 'protractor',
+      standalone: 'gestrec',
       debug: true,
       cache: {}, packageCache: {}
     }); 
@@ -16,10 +16,10 @@ function browser() {
 
 function build() {
   return browser().bundle()
-    .pipe(source('protractor.js'))
+    .pipe(source('gestrec.js'))
     .pipe(buffer())
     .pipe(gulp.dest('.'))
-    // This will minify and rename to protractor.min.js
+    // This will minify and rename to gestrec.min.js
     .pipe(uglify())
     .pipe(rename({ extname: '.min.js' }))
     .pipe(gulp.dest('.')); 
