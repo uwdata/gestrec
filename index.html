@@ -1,10 +1,10 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <title>Protractor Gesture Designer</title>
+    <title>Gesture Designer</title>
     <link rel="stylesheet" type="text/css" href="library.css">
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="protractor.min.js" charset="utf-8"></script>
+    <script src="d3.v3.min.js" charset="utf-8"></script>
+    <script src="gestrec.min.js" charset="utf-8"></script>
     <script src="library.js" charset="utf-8"></script>
     <style>
 body {
@@ -91,7 +91,7 @@ canvas {
   </body>
   <script>
 var MAX_SCORE = 100;
-var THRESHOLD = 2;
+var THRESHOLD = 2.5;
 var TRAIN = "train";
 var TEST = "test";
 var EXPORT = "export";
@@ -182,7 +182,7 @@ function clearCanvas() {
 function point() {
   var p = getXY(d3.event);
   var t = Date.now() - basetime;
-  return new protractor.GesturePoint(p.x/width, p.y/height, t);
+  return new gestrec.Point(p.x/width, p.y/height, t);
 }
 
 function strokeStart() {
@@ -200,8 +200,8 @@ function strokeMove() {
 }
 
 function strokeEnd() {
-  var strokes = [new protractor.GestureStroke(normalize(points))];
-  var gesture = new protractor.Gesture(strokes);
+  var strokes = [new gestrec.Stroke(normalize(points))];
+  var gesture = new gestrec.Gesture(strokes);
   
   if (mode === TRAIN) {
     lib.addGesture(gesture).render();
