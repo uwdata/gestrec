@@ -9,7 +9,7 @@ This package provides a JavaScript version of Yang Li's [Protractor](http://yang
 Protractor can be used both server-side and client-side. For use in node.js,
 simply `npm install protractor` or include protractor as a dependency in your package.json file. For use on the client, simply import protractor.min.js in the browser.
 
-### Usage
+### Example
 
 ```javascript
 var protractor = require('protractor');
