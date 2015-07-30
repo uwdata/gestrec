@@ -4,6 +4,7 @@
     <title>Gesture Designer</title>
     <link rel="stylesheet" type="text/css" href="library.css">
     <script src="d3.v3.min.js" charset="utf-8"></script>
+    <script src="jquery.js" charset="utf-8"></script>
     <script src="../gestrec.min.js" charset="utf-8"></script>
     <script src="library.js" charset="utf-8"></script>
     <style>
@@ -81,6 +82,7 @@ canvas {
         <div class="header">
           Gesture Loader
           <div class="controls">
+            <button id="post">Post</button>
             <button id="download">Download</button>
             <button id="import">Import</button>
           </div>
@@ -139,6 +141,13 @@ d3.select("#download").on("click", function() {
   } catch (err) {
     alert(err);
   }
+});
+
+d3.select("#post").on("click", function() {
+    var json = d3.select("#json").property("value");
+    $.post('/data', {train: json}, function (){
+
+    })
 });
 
 function download(filename, text) {
