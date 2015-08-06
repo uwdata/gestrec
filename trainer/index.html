@@ -4,7 +4,7 @@
     <title>Gesture Designer</title>
     <link rel="stylesheet" type="text/css" href="library.css">
     <script src="d3.v3.min.js" charset="utf-8"></script>
-    <script src="jquery.js" charset="utf-8"></script>
+    <script src="jquery-2.1.3.min.js" charset="utf-8"></script>
     <script src="../gestrec.min.js" charset="utf-8"></script>
     <script src="library.js" charset="utf-8"></script>
     <style>
@@ -145,9 +145,7 @@ d3.select("#download").on("click", function() {
 
 d3.select("#post").on("click", function() {
     var json = d3.select("#json").property("value");
-    $.post('/data', {train: json}, function (){
-
-    })
+    $.post('/data', {train: json})
 });
 
 function download(filename, text) {
