@@ -18,3 +18,9 @@ app.post('/data', urlencodedParser, function (req, res) {
 app.use(express.static('trainer'));
 
 app.listen(8080);
+
+console.log('')
+console.log('You can browse')
+console.log('')
+console.log('   http://localhost:8080/index.html')
+console.log('')
