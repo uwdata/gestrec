@@ -1,7 +1,3 @@
-/**
- * Created by d1m on 7/28/2015.
- */
-
 var express = require('express')
 var bodyParser = require('body-parser')
 var morgan = require('morgan')
