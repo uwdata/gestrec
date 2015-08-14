@@ -3,9 +3,11 @@ var bodyParser = require('body-parser')
 var morgan = require('morgan')
 
 console.log('---------------')
-console.log('GestRec Trainer')
+console.log('\tGestRec Trainer')
 console.log('')
-console.log('You can browse : http://127.0.0.1:8080/')
+console.log('\tYou can browse : http://127.0.0.1:8080/')
+console.log('---------------')
+console.log('')
 
 var app = express()
 app.use(morgan())
@@ -23,9 +25,3 @@ app.post('/data', urlencodedParser, function (req, res) {
 app.use(express.static('trainer'));
 
 app.listen(8080);
-
-console.log('')
-console.log('You can browse')
-console.log('')
-console.log('   http://localhost:8080/index.html')
-console.log('')
