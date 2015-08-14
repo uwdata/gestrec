@@ -50,6 +50,7 @@ The application is intended to work with both mouse and touch input. The code fo
 
 You can use provided `express.js` node script to spawn a webserver that starts the trainer and give you access to a POST method which records the results into a `results.json` file at root of this repo.
 This is useful if you intend to produce tablet / mobile gesture.
+If you append a `GET` parameter `bg` to the url, targeting an image, it will display it under the `designer` zone to give you some help.
 
 ## Build Process
 

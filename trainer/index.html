@@ -159,6 +159,44 @@ function download(filename, text) {
 
 // ---
 
+var bg = false
+if (location.search.match(/bg=/))
+    bg = location.search.match(/bg=([^&]+)/)[1]
+
+if (bg) {
+    $('canvas')
+            .css('background-color', 'transparent')
+            .css('position', 'absolute')
+            .css('z-index', '1');
+    $('<img>').attr('src', bg)
+            .css('position', 'absolute')
+            .css('top', '35px')
+            .css('left', '50px')
+            .css('z-index', '0')
+            .appendTo('#designer')
+            .one('load', function () {
+                var h = $(this).height()
+                var w = $(this).width()
+
+                var rW = 400 / w * 100;
+                var rH = 400 / h * 100;
+
+                if (rW<rH) {
+                    $(this).css('height', h * rW /100 )
+                    $(this).css('width', w* rW /100 )
+                } else {
+                    $(this).css('height', h* rH /100)
+                    $(this).css('width', w* rH /100)
+                }
+            })
+}
+/*
+
+ top: 35px;
+ left: 61px;
+ */
+// ---
+
 var canvas = d3.select("#canvas").node();
 var width = canvas.width;
 var height = canvas.height;
