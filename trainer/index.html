@@ -37,6 +37,10 @@ canvas {
   border: 1px solid #dedede;
   transition: all 1s;
 }
+#message {
+  position: absolute;
+  top: 450px;
+}
 #panel {
   margin-left: 430px;
   padding-bottom: 20px;
@@ -114,7 +118,6 @@ function setMode(value) {
     d3.select("#export").style("display", "none");
   }
   d3.select("#canvas")
-    .style("background", mode===TRAIN ? "#faf5f5" : "#f5f5f5")
     .style("border", mode===TRAIN ? "1px solid #a33" : null);
   clearCanvas();
 }
